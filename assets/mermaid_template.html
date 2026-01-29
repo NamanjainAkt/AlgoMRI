@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+    }
+    
+    .mermaid-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .mermaid {
+      max-width: 100%;
+    }
+    
+    /* Dark theme */
+    body.dark {
+      background-color: #0A0A0F;
+      color: #FFFFFF;
+    }
+    
+    /* Light theme */
+    body.light {
+      background-color: #F8FAFC;
+      color: #1E293B;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="mermaid-container">
+    <div class="mermaid" id="mermaidChart">
+      <!-- CHART_PLACEHOLDER -->
+    </div>
+  </div>
+  
+  <script>
+    // Initialize Mermaid
+    let currentTheme = 'dark';
+    
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: currentTheme,
+      themeVariables: {
+        primaryColor: '#00FFFF',
+        primaryTextColor: '#FFFFFF',
+        primaryBorderColor: '#8B5CF6',
+        lineColor: '#00FFFF',
+        secondaryColor: '#8B5CF6',
+        tertiaryColor: '#EC4899',
+      }
+    });
+    
+    // Listen for messages from React Native
+    window.addEventListener('message', (event) => {
+      const data = event.data;
+      
+      if (data.type === 'updateTheme') {
+        currentTheme = data.theme;
+        document.body.className = currentTheme;
+        
+        // Re-initialize Mermaid with new theme
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: currentTheme,
+          themeVariables: currentTheme === 'dark' ? {
+            primaryColor: '#00FFFF',
+            primaryTextColor: '#FFFFFF',
+            primaryBorderColor: '#8B5CF6',
+            lineColor: '#00FFFF',
+            secondaryColor: '#8B5CF6',
+            tertiaryColor: '#EC4899',
+          } : {
+            primaryColor: '#0EA5E9',
+            primaryTextColor: '#1E293B',
+            primaryBorderColor: '#7C3AED',
+            lineColor: '#0EA5E9',
+            secondaryColor: '#7C3AED',
+            tertiaryColor: '#EC4899',
+          }
+        });
+        
+        // Re-render chart
+        const chartElement = document.getElementById('mermaidChart');
+        if (chartElement) {
+          mermaid.run({ nodes: [chartElement] });
+        }
+      }
+      
+      if (data.type === 'getSVG') {
+        const svg = document.querySelector('.mermaid svg');
+        if (svg) {
+          const svgData = new XMLSerializer().serializeToString(svg);
+          window.ReactNativeWebView.postMessage(JSON.stringify({
+            type: 'svgData',
+            data: svgData
+          }));
+        }
+      }
+    });
+    
+    // Notify React Native that page is loaded
+    if (window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(JSON.stringify({
+        type: 'loaded'
+      }));
+    }
+  </script>
+</body>
+</html>
