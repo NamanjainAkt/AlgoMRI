@@ -28,16 +28,16 @@ export const FlowchartViewer: React.FC<FlowchartViewerProps> = ({ mermaidCode })
       <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-          background-color: ${isDark ? '#0A0A0F' : '#F8FAFC'};
-          color: ${isDark ? '#FFFFFF' : '#1E293B'};
-          font-family: -apple-system, sans-serif;
+          background-color: ${isDark ? '#000000' : '#FFFFFF'};
+          color: ${isDark ? '#EDEDED' : '#000000'};
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
           display: flex;
           justify-content: center;
           align-items: center;
           min-height: 100vh;
-          padding: 20px;
+          padding: 24px;
         }
-        .mermaid { max-width: 100%; }
+        .mermaid { width: 100%; text-align: center; }
       </style>
     </head>
     <body>
@@ -46,26 +46,40 @@ export const FlowchartViewer: React.FC<FlowchartViewerProps> = ({ mermaidCode })
         try {
           mermaid.initialize({
             startOnLoad: true,
-            theme: '${isDark ? 'dark' : 'light'}',
+            theme: 'base',
             themeVariables: ${isDark ? `{
-              primaryColor: '#00FFFF',
-              primaryTextColor: '#FFFFFF',
-              primaryBorderColor: '#8B5CF6',
-              lineColor: '#00FFFF',
-              secondaryColor: '#8B5CF6',
-              tertiaryColor: '#EC4899',
+              primaryColor: '#000000',
+              primaryTextColor: '#EDEDED',
+              primaryBorderColor: '#333333',
+              lineColor: '#666666',
+              secondaryColor: '#111111',
+              tertiaryColor: '#111111',
+              fontFamily: 'sans-serif',
+              fontSize: '14px',
+              mainBkg: '#000000',
+              nodeBorder: '#333333',
+              clusterBkg: '#111111',
+              clusterBorder: '#333333',
+              edgeLabelBackground: '#111111',
             }` : `{
-              primaryColor: '#0EA5E9',
-              primaryTextColor: '#1E293B',
-              primaryBorderColor: '#7C3AED',
-              lineColor: '#0EA5E9',
-              secondaryColor: '#7C3AED',
-              tertiaryColor: '#EC4899',
+              primaryColor: '#FFFFFF',
+              primaryTextColor: '#000000',
+              primaryBorderColor: '#EAEAEA',
+              lineColor: '#999999',
+              secondaryColor: '#FAFAFA',
+              tertiaryColor: '#FFFFFF',
+              fontFamily: 'sans-serif',
+              fontSize: '14px',
+              mainBkg: '#FFFFFF',
+              nodeBorder: '#EAEAEA',
+              clusterBkg: '#FAFAFA',
+              clusterBorder: '#EAEAEA',
+              edgeLabelBackground: '#FFFFFF',
             }`}
           });
         } catch (e) {
           console.error('Mermaid init error:', e);
-          document.body.innerHTML = '<div style="color: red; padding: 20px;">Flowchart Syntax Error: ' + e.message + '</div>';
+          document.body.innerHTML = '<div style="color: #EE0000; padding: 20px; font-family: sans-serif;">Flowchart Syntax Error: ' + e.message + '</div>';
         }
         
         window.ReactNativeWebView?.postMessage(JSON.stringify({ type: 'loaded' }));
@@ -165,7 +179,7 @@ const styles = StyleSheet.create({
         padding: 8,
     },
     webViewContainer: {
-        height: 400,
+        height: 600,
         borderRadius: 8,
         overflow: 'hidden',
     },

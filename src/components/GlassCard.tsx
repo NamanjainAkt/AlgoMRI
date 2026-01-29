@@ -12,7 +12,7 @@ interface GlassCardProps {
 export const GlassCard: React.FC<GlassCardProps> = ({
     children,
     style,
-    intensity = 20
+    intensity = 10
 }) => {
     const { theme, isDark } = useTheme();
 
@@ -33,12 +33,12 @@ export const GlassCard: React.FC<GlassCardProps> = ({
 
 const styles = StyleSheet.create({
     container: {
-        borderRadius: 16,
+        borderRadius: 8,
         borderWidth: 1,
         overflow: 'hidden',
     },
     blur: {
-        borderRadius: 16,
+        borderRadius: 8,
     },
     content: {
         padding: 16,

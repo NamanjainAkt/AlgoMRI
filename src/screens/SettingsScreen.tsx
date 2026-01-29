@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, TextInput, Switch, TouchableOpacity } from 'react-native';
 import { Header } from '../components/Header';
 import { GlassCard } from '../components/GlassCard';
 import { GlowButton } from '../components/GlowButton';
@@ -7,7 +7,7 @@ import { useTheme } from '../context/ThemeContext';
 import { storageService } from '../services/storageService';
 
 export const SettingsScreen = () => {
-    const { theme } = useTheme();
+    const { theme, isDark, toggleTheme } = useTheme();
     const [apiKey, setApiKey] = useState('');
 
     const handleClearHistory = () => {
@@ -38,34 +38,24 @@ export const SettingsScreen = () => {
             >
                 <GlassCard style={styles.section}>
                     <Text style={[styles.sectionTitle, { color: theme.text }]}>
-                        AI Model Configuration
+                        Appearance
                     </Text>
-                    <Text style={[styles.description, { color: theme.textMuted }]}>
-                        Configure your AI model for code analysis. You'll need to set this up in the code.
-                    </Text>
-
-                    <Text style={[styles.label, { color: theme.text }]}>
-                        API Key (Optional)
-                    </Text>
-                    <TextInput
-                        value={apiKey}
-                        onChangeText={setApiKey}
-                        placeholder="Enter your API key..."
-                        placeholderTextColor={theme.textMuted}
-                        style={[
-                            styles.input,
-                            {
-                                color: theme.text,
-                                backgroundColor: theme.surface,
-                                borderColor: theme.border,
-                            }
-                        ]}
-                        secureTextEntry
-                    />
-
-                    <Text style={[styles.hint, { color: theme.textMuted }]}>
-                        Note: Model configuration is done in aiAnalyzer.ts using setAIModel()
-                    </Text>
+                    <View style={styles.row}>
+                        <View>
+                            <Text style={[styles.rowTitle, { color: theme.text }]}>
+                                Dark Mode
+                            </Text>
+                            <Text style={[styles.rowSubtitle, { color: theme.textMuted }]}>
+                                {isDark ? 'Dark mode is active' : 'Light mode is active'}
+                            </Text>
+                        </View>
+                        <Switch
+                            value={isDark}
+                            onValueChange={toggleTheme}
+                            trackColor={{ false: '#767577', true: theme.accent }}
+                            thumbColor={isDark ? '#FFFFFF' : '#f4f3f4'}
+                        />
+                    </View>
                 </GlassCard>
 
                 <GlassCard style={styles.section}>
@@ -162,5 +152,19 @@ const styles = StyleSheet.create({
     infoValue: {
         fontSize: 14,
         fontWeight: '600',
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 8,
+    },
+    rowTitle: {
+        fontSize: 16,
+        fontWeight: '600',
+    },
+    rowSubtitle: {
+        fontSize: 12,
+        marginTop: 4,
     },
 });

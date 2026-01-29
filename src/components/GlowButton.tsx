@@ -51,7 +51,7 @@ export const GlowButton: React.FC<GlowButtonProps> = ({
                     end={{ x: 1, y: 1 }}
                     style={styles.gradient}
                 >
-                    <Text style={[styles.text, { color: theme.text }, textStyle]}>
+                    <Text style={[styles.text, { color: theme.background }, textStyle]}>
                         {title}
                     </Text>
                 </LinearGradient>

@@ -1,12 +1,7 @@
-import { generateText } from 'ai';
 import { AnalysisResult } from './storageService';
 
-// Model will be configured later by user
-let aiModel: any = null;
-
-export const setAIModel = (model: any) => {
-    aiModel = model;
-};
+const OPENROUTER_API_KEY = process.env.EXPO_PUBLIC_OPENROUTER_API_KEY;
+const MODEL_NAME = 'tngtech/deepseek-r1t2-chimera:free';
 
 const ANALYSIS_PROMPT = `You are an expert code analyzer. Analyze the following code.
 Your response must contain two distinct sections:
@@ -29,13 +24,13 @@ Example Format:
 
 [FLOWCHART]
 graph TD
-    A["Start"] --> B["Process"]
-    B --> C{"End?"}
+    N1["Start"] --> N2["Process"]
+    N2 --> N3{"End?"}
 [/FLOWCHART]
 
 STRICT MERMAID RULES (CRITICAL):
 - Start with "graph TD"
-- Use ONLY generic alphanumeric Node IDs: N1, N2, N3... (Do NOT use A, B, or descriptive IDs).
+- Use ONLY generic alphanumeric Node IDs: N1, N2, N3...
 - Use double quotes for EVERY label: N1["Start"]
 - ESCAPE internal double quotes with backslash: N1["Print \"Hello\""]
 - Use ONLY two shapes: Rectangles N1["Step"] and Diamonds N2{"Condition?"}.
@@ -46,18 +41,41 @@ STRICT MERMAID RULES (CRITICAL):
 Code to analyze:`;
 
 export const analyzeCode = async (code: string): Promise<AnalysisResult> => {
-    console.log('🚀 FORCING NEW BUNDLE: EXECUTING AI_ANALYZER V4 (STRICT MERMAID)');
+    console.log('🚀 EXECUTING AI_ANALYZER V5 (OPENROUTER/DEEPSEEK)');
 
-    if (!aiModel) {
-        throw new Error('AI model not configured.');
+    if (!OPENROUTER_API_KEY) {
+        throw new Error('OpenRouter API key not configured.');
     }
 
     try {
-        const { text } = await generateText({
-            model: aiModel,
-            prompt: `${ANALYSIS_PROMPT}\n\n${code}`,
-            temperature: 0.1,
+        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                'HTTP-Referer': 'https://algomri.ai', // Optional but good practice
+                'X-Title': 'AlgoMRI',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model: MODEL_NAME,
+                messages: [
+                    {
+                        role: 'user',
+                        content: `${ANALYSIS_PROMPT}\n\n${code}`,
+                    },
+                ],
+                temperature: 0.1,
+            }),
         });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('OpenRouter API Error:', errorData);
+            throw new Error(`OpenRouter API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const text = data.choices[0]?.message?.content || '';
 
         console.log('✅ AI Response received and extraction starting...');
 
@@ -72,7 +90,7 @@ export const analyzeCode = async (code: string): Promise<AnalysisResult> => {
         }
 
         const jsonData = JSON.parse(jsonMatch[1].trim());
-        let flowchartData = flowchartMatch ? flowchartMatch[1].trim() : 'graph TD\n  A["No Flowchart Generated"]';
+        let flowchartData = flowchartMatch ? flowchartMatch[1].trim() : 'graph TD\n  N1["No Flowchart Generated"]';
 
         // Sanitize flowchart - remove markdown tags if any
         flowchartData = flowchartData.replace(/```mermaid\n?/g, '').replace(/```\n?/g, '').trim();
@@ -89,7 +107,7 @@ export const analyzeCode = async (code: string): Promise<AnalysisResult> => {
         // Fallback Result
         return {
             title: 'Analysis Error',
-            flowchart: 'graph TD\n  A["Error Analyzing Code"] --> B["Logic Error"]',
+            flowchart: 'graph TD\n  N1["Error Analyzing Code"] --> N2["Logic Error"]',
             pseudocode: ['An error occurred during AI analysis.'],
             summary: ['Failed to parse AI response.'],
             dryRun: [],

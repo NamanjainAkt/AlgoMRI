@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
         borderRadius: 6,
     },
     input: {
-        minHeight: 200,
+        minHeight: 250,
         maxHeight: 400,
         fontSize: 14,
         lineHeight: 20,

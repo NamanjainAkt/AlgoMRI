@@ -21,25 +21,12 @@ import {
   SpaceMono_700Bold,
 } from '@expo-google-fonts/space-mono';
 
-// AI Configuration - Using Google Gemini (Free Tier)
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { setAIModel } from './src/services/aiAnalyzer';
+// OpenRouter Configuration
+const openRouterKey = process.env.EXPO_PUBLIC_OPENROUTER_API_KEY;
+console.log('OpenRouter API Key status:', openRouterKey ? 'LOADED' : 'NOT FOUND');
 
-// Get API key from environment
-const apiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY;
-console.log('Google API Key loaded:', apiKey ? `${apiKey.substring(0, 15)}...` : 'NOT FOUND - Using demo mode');
-
-// Configure Google Gemini
-if (apiKey) {
-  const google = createGoogleGenerativeAI({
-    apiKey: apiKey,
-  });
-
-  // Use Gemini 2.5 Flash (latest high-performance model)
-  setAIModel(google('gemini-2.5-flash'));
-  console.log('Using Google Gemini 2.5 Flash');
-} else {
-  console.warn('No API key found - app will use fallback error messages');
+if (!openRouterKey) {
+  console.warn('No OpenRouter API key found - app will use fallback error messages');
 }
 
 import { ThemeProvider, useTheme } from './src/context/ThemeContext';

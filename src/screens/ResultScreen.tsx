@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import { Header } from '../components/Header';
@@ -22,12 +23,12 @@ export const ResultScreen = () => {
     const { result } = route.params;
     const [activeTab, setActiveTab] = useState<TabType>('flowchart');
 
-    const tabs: { key: TabType; label: string }[] = [
-        { key: 'flowchart', label: 'Flowchart' },
-        { key: 'pseudocode', label: 'Pseudocode' },
-        { key: 'dryrun', label: 'Dry Run' },
-        { key: 'complexity', label: 'Complexity' },
-        { key: 'tests', label: 'Tests' },
+    const tabs: { key: TabType; label: string; icon: keyof typeof Ionicons.glyphMap }[] = [
+        { key: 'flowchart', label: 'Flowchart', icon: 'git-network-outline' },
+        { key: 'pseudocode', label: 'Code', icon: 'code-slash-outline' },
+        { key: 'dryrun', label: 'Dry Run', icon: 'play-outline' },
+        { key: 'complexity', label: 'Complexity', icon: 'speedometer-outline' },
+        { key: 'tests', label: 'Tests', icon: 'checkbox-outline' },
     ];
 
     const renderContent = () => {
@@ -110,14 +111,18 @@ export const ResultScreen = () => {
                         onPress={() => setActiveTab(tab.key)}
                         style={[
                             styles.tab,
-                            { borderBottomColor: theme.primary },
                             activeTab === tab.key && styles.activeTab,
                         ]}
                     >
+                        <Ionicons
+                            name={tab.icon}
+                            size={16}
+                            color={activeTab === tab.key ? '#0070F3' : theme.textMuted}
+                        />
                         <Text
                             style={[
                                 styles.tabText,
-                                { color: activeTab === tab.key ? theme.primary : theme.textMuted },
+                                { color: activeTab === tab.key ? '#0070F3' : theme.textMuted },
                             ]}
                         >
                             {tab.label}
@@ -141,22 +146,27 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     tabsContainer: {
+        marginVertical: 16,
+        paddingHorizontal: 16,
         maxHeight: 50,
-        borderBottomWidth: 1,
-        borderBottomColor: 'rgba(255, 255, 255, 0.1)',
     },
     tabsContent: {
-        paddingHorizontal: 16,
+        gap: 8,
+        paddingRight: 16,
     },
     tab: {
-        paddingVertical: 12,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+        paddingVertical: 8,
         paddingHorizontal: 16,
-        marginRight: 8,
-        borderBottomWidth: 2,
-        borderBottomColor: 'transparent',
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: 'transparent',
     },
     activeTab: {
-        borderBottomWidth: 2,
+        borderColor: '#0070F3',
+        backgroundColor: 'rgba(0, 112, 243, 0.1)',
     },
     tabText: {
         fontSize: 14,

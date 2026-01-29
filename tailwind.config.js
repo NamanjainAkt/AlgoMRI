@@ -8,36 +8,38 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        void: {
-          DEFAULT: '#0A0A0F',
-          light: '#1A1A2E',
+        background: {
+          light: '#FFFFFF',
+          dark: '#000000',
         },
         surface: {
-          dark: '#1A1A2E',
-          light: '#FFFFFF',
+          light: '#FAFAFA',
+          dark: '#111111',
         },
-        neon: {
-          cyan: '#00FFFF',
-          purple: '#8B5CF6',
-          pink: '#EC4899',
-          blue: '#0EA5E9',
+        border: {
+          light: '#EAEAEA',
+          dark: '#333333',
         },
-        text: {
+        primary: {
+          light: '#000000',
           dark: '#FFFFFF',
-          light: '#1E293B',
-          muted: {
-            dark: '#9CA3AF',
-            light: '#64748B',
-          }
         },
-        bg: {
-          dark: '#0A0A0F',
-          light: '#F8FAFC',
-        }
+        secondary: {
+          light: '#666666',
+          dark: '#888888',
+        },
+        accent: {
+          blue: '#0070F3',
+          purple: '#7928CA',
+          pink: '#FF0080',
+          orange: '#F5A623',
+          cyan: '#50E3C2',
+        },
+        success: '#0070F3',
+        warning: '#F5A623',
+        error: '#EE0000',
       },
       fontFamily: {
-        orbitron: ['Orbitron_400Regular', 'Orbitron_700Bold', 'Orbitron_900Black'],
-        exo: ['Exo2_400Regular', 'Exo2_600SemiBold', 'Exo2_700Bold'],
         mono: ['SpaceMono_400Regular', 'SpaceMono_700Bold'],
       },
     },

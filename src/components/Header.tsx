@@ -26,18 +26,6 @@ export const Header: React.FC<HeaderProps> = ({
 
                 <View style={styles.rightSection}>
                     {rightComponent}
-                    {showThemeToggle && (
-                        <TouchableOpacity
-                            onPress={toggleTheme}
-                            style={[styles.themeButton, { backgroundColor: theme.cardBg }]}
-                        >
-                            <Ionicons
-                                name={isDark ? 'sunny' : 'moon'}
-                                size={20}
-                                color={theme.primary}
-                            />
-                        </TouchableOpacity>
-                    )}
                 </View>
             </View>
 
@@ -63,23 +51,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     title: {
-        fontSize: 28,
-        fontWeight: '900',
-        letterSpacing: 1.5,
+        fontSize: 32,
+        fontWeight: '800',
+        letterSpacing: -1, // Geist/Inter style tight tracking
     },
     rightSection: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 12,
     },
-    themeButton: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
+    // themeButton removed
     gradient: {
+
         height: 3,
         marginTop: 12,
         borderRadius: 1.5,
