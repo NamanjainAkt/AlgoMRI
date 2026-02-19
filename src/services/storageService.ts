@@ -1,5 +1,17 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+export interface FlowchartNode {
+    id: string;
+    label: string;
+    type: 'start' | 'end' | 'process' | 'decision' | 'io' | 'loop' | 'return';
+}
+
+export interface FlowchartEdge {
+    from: string;
+    to: string;
+    label?: string;
+}
+
 export interface DryRunStep {
     step: number;
     line: string;
@@ -15,7 +27,8 @@ export interface TestCase {
 
 export interface AnalysisResult {
     title: string;
-    flowchart: string;
+    flowchartNodes: FlowchartNode[];
+    flowchartEdges: FlowchartEdge[];
     pseudocode: string[];
     summary: string[];
     dryRun: DryRunStep[];

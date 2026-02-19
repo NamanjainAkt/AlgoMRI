@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import { Header } from '../components/Header';
-import { FlowchartViewer } from '../components/FlowchartViewer';
+import { FlowchartViewer } from '../components/FlowchartViewer/FlowchartViewer';
 import { DryRunStepper } from '../components/DryRunStepper';
 import { ComplexityCard } from '../components/ComplexityCard';
 import { TestCaseCard } from '../components/TestCaseCard';
@@ -34,7 +34,13 @@ export const ResultScreen = () => {
     const renderContent = () => {
         switch (activeTab) {
             case 'flowchart':
-                return <FlowchartViewer mermaidCode={result.flowchart} />;
+                return (
+                    <FlowchartViewer 
+                        nodes={result.flowchartNodes || []} 
+                        edges={result.flowchartEdges || []}
+                        isDark={theme.background === '#0A0A0A'}
+                    />
+                );
 
             case 'pseudocode':
                 return (

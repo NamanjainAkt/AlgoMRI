@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
     * {
@@ -13,6 +13,7 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       overflow-x: hidden;
+      touch-action: pan-x pan-y pinch-zoom;
     }
     
     .mermaid-container {
@@ -30,13 +31,194 @@
     /* Dark theme */
     body.dark {
       background-color: #0A0A0F;
-      color: #FFFFFF;
+      color: #EDEDED;
     }
     
     /* Light theme */
     body.light {
-      background-color: #F8FAFC;
+      background-color: #FAFAFA;
       color: #1E293B;
+    }
+    
+    /* Thicker lines and arrows */
+    .mermaid svg .edgePath .path {
+      stroke-width: 4px !important;
+      stroke-linecap: round;
+    }
+    
+    /* Arrow styling - Dark */
+    body.dark .mermaid svg .arrowheadPath {
+      fill: #60A5FA !important;
+    }
+    
+    /* Arrow styling - Light */
+    body.light .mermaid svg .arrowheadPath {
+      fill: #3B82F6 !important;
+    }
+    
+    /* Node base styling with soft shadows */
+    .mermaid svg .node rect, .mermaid svg .node circle, 
+    .mermaid svg .node ellipse, .mermaid svg .node polygon {
+      stroke-width: 3px !important;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+      rx: 8px;
+    }
+    
+    /* Start/End nodes - Pastel Mint Green - Dark */
+    body.dark .mermaid svg .node.start-end rect,
+    body.dark .mermaid svg .node.start-end circle {
+      fill: #6EE7B7 !important;
+      stroke: #34D399 !important;
+      stroke-width: 3px !important;
+    }
+    body.dark .mermaid svg .node.start-end .label {
+      fill: #064E3B !important;
+      font-weight: 600 !important;
+    }
+    
+    /* Start/End nodes - Pastel Mint Green - Light */
+    body.light .mermaid svg .node.start-end rect,
+    body.light .mermaid svg .node.start-end circle {
+      fill: #D1FAE5 !important;
+      stroke: #10B981 !important;
+      stroke-width: 3px !important;
+    }
+    body.light .mermaid svg .node.start-end .label {
+      fill: #065F46 !important;
+      font-weight: 600 !important;
+    }
+    
+    /* Process nodes - Pastel Sky Blue - Dark */
+    body.dark .mermaid svg .node.process rect {
+      fill: #93C5FD !important;
+      stroke: #60A5FA !important;
+      stroke-width: 3px !important;
+    }
+    body.dark .mermaid svg .node.process .label {
+      fill: #1E3A8A !important;
+    }
+    
+    /* Process nodes - Pastel Sky Blue - Light */
+    body.light .mermaid svg .node.process rect {
+      fill: #DBEAFE !important;
+      stroke: #3B82F6 !important;
+      stroke-width: 3px !important;
+    }
+    body.light .mermaid svg .node.process .label {
+      fill: #1E40AF !important;
+    }
+    
+    /* Decision nodes - Pastel Peach/Orange - Dark */
+    body.dark .mermaid svg .node.decision polygon {
+      fill: #FDBA74 !important;
+      stroke: #FB923C !important;
+      stroke-width: 3px !important;
+    }
+    body.dark .mermaid svg .node.decision .label {
+      fill: #7C2D12 !important;
+      font-weight: 600 !important;
+    }
+    
+    /* Decision nodes - Pastel Peach/Orange - Light */
+    body.light .mermaid svg .node.decision polygon {
+      fill: #FFEDD5 !important;
+      stroke: #F97316 !important;
+      stroke-width: 3px !important;
+    }
+    body.light .mermaid svg .node.decision .label {
+      fill: #9A3412 !important;
+      font-weight: 600 !important;
+    }
+    
+    /* Input/Output nodes - Pastel Lavender Purple - Dark */
+    body.dark .mermaid svg .node.io rect {
+      fill: #C4B5FD !important;
+      stroke: #A78BFA !important;
+      stroke-width: 3px !important;
+    }
+    body.dark .mermaid svg .node.io .label {
+      fill: #5B21B6 !important;
+    }
+    
+    /* Input/Output nodes - Pastel Lavender Purple - Light */
+    body.light .mermaid svg .node.io rect {
+      fill: #EDE9FE !important;
+      stroke: #8B5CF6 !important;
+      stroke-width: 3px !important;
+    }
+    body.light .mermaid svg .node.io .label {
+      fill: #6D28D9 !important;
+    }
+    
+    /* Loop/Iteration nodes - Pastel Rose/Pink - Dark */
+    body.dark .mermaid svg .node.loop rect {
+      fill: #FDA4AF !important;
+      stroke: #F472B6 !important;
+      stroke-width: 3px !important;
+    }
+    body.dark .mermaid svg .node.loop .label {
+      fill: #881337 !important;
+    }
+    
+    /* Loop/Iteration nodes - Pastel Rose/Pink - Light */
+    body.light .mermaid svg .node.loop rect {
+      fill: #FFE4E6 !important;
+      stroke: #EC4899 !important;
+      stroke-width: 3px !important;
+    }
+    body.light .mermaid svg .node.loop .label {
+      fill: #9F1239 !important;
+    }
+    
+    /* Return/End nodes - Pastel Coral/Red - Dark */
+    body.dark .mermaid svg .node.return rect {
+      fill: #FCA5A5 !important;
+      stroke: #F87171 !important;
+      stroke-width: 3px !important;
+    }
+    body.dark .mermaid svg .node.return .label {
+      fill: #7F1D1D !important;
+      font-weight: 600 !important;
+    }
+    
+    /* Return/End nodes - Pastel Coral/Red - Light */
+    body.light .mermaid svg .node.return rect {
+      fill: #FEE2E2 !important;
+      stroke: #EF4444 !important;
+      stroke-width: 3px !important;
+    }
+    body.light .mermaid svg .node.return .label {
+      fill: #991B1B !important;
+      font-weight: 600 !important;
+    }
+    
+    /* Default node label styling */
+    .mermaid svg .node .label {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+      font-size: 15px !important;
+      font-weight: 500;
+    }
+
+    /* Edge labels - Dark */
+    body.dark .mermaid svg .edgeLabel {
+      background-color: #1F2937 !important;
+      color: #E5E7EB !important;
+      padding: 6px 10px !important;
+      border-radius: 6px !important;
+      font-size: 13px !important;
+      font-weight: 500;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    /* Edge labels - Light */
+    body.light .mermaid svg .edgeLabel {
+      background-color: #FFFFFF !important;
+      color: #374151 !important;
+      padding: 6px 10px !important;
+      border-radius: 6px !important;
+      font-size: 13px !important;
+      font-weight: 500;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
   </style>
 </head>
@@ -51,18 +233,90 @@
     // Initialize Mermaid
     let currentTheme = 'dark';
     
+    function getThemeVariables(theme) {
+      if (theme === 'dark') {
+        return {
+          primaryColor: '#334155',
+          primaryTextColor: '#F1F5F9',
+          primaryBorderColor: '#475569',
+          lineColor: '#60A5FA',
+          secondaryColor: '#334155',
+          tertiaryColor: '#475569',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+          fontSize: '15px',
+          mainBkg: '#334155',
+          nodeBorder: '#60A5FA',
+          clusterBkg: '#1E293B',
+          clusterBorder: '#475569',
+          edgeLabelBackground: '#1F2937',
+          edgeLabelColor: '#E2E8F0'
+        };
+      } else {
+        return {
+          primaryColor: '#F8FAFC',
+          primaryTextColor: '#1E293B',
+          primaryBorderColor: '#CBD5E1',
+          lineColor: '#3B82F6',
+          secondaryColor: '#F1F5F9',
+          tertiaryColor: '#FFFFFF',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+          fontSize: '15px',
+          mainBkg: '#FFFFFF',
+          nodeBorder: '#60A5FA',
+          clusterBkg: '#F8FAFC',
+          clusterBorder: '#E2E8F0',
+          edgeLabelBackground: '#FFFFFF',
+          edgeLabelColor: '#475569'
+        };
+      }
+    }
+    
+    function applyNodeClasses() {
+      const nodes = document.querySelectorAll('.mermaid .node');
+      nodes.forEach(node => {
+        const label = node.querySelector('.label');
+        if (label) {
+          const text = label.textContent.toLowerCase();
+          
+          // Classify nodes based on content
+          if (text.includes('start') || text.includes('end') || text.includes('begin') || text.includes('finish')) {
+            node.classList.add('start-end');
+          } else if (text.includes('return') || text.includes('exit')) {
+            node.classList.add('return');
+          } else if (text.includes('?') || text.includes('if ') || text.includes('else') || 
+                    text.includes('check') || text.includes('validate') || 
+                    node.querySelector('polygon')) {
+            node.classList.add('decision');
+          } else if (text.includes('input') || text.includes('output') || text.includes('print') || 
+                    text.includes('read') || text.includes('write') || text.includes('display') ||
+                    text.includes('console.log') || text.includes('printf')) {
+            node.classList.add('io');
+          } else if (text.includes('for ') || text.includes('while ') || text.includes('loop') || 
+                    text.includes('repeat') || text.includes('iterate') || text.includes('each')) {
+            node.classList.add('loop');
+          } else {
+            node.classList.add('process');
+          }
+        }
+      });
+    }
+    
     mermaid.initialize({
       startOnLoad: true,
-      theme: currentTheme,
-      themeVariables: {
-        primaryColor: '#00FFFF',
-        primaryTextColor: '#FFFFFF',
-        primaryBorderColor: '#8B5CF6',
-        lineColor: '#00FFFF',
-        secondaryColor: '#8B5CF6',
-        tertiaryColor: '#EC4899',
-      }
+      theme: 'base',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis',
+        padding: 25,
+        nodeSpacing: 50,
+        rankSpacing: 60
+      },
+      themeVariables: getThemeVariables(currentTheme)
     });
+    
+    // Apply color coding after render
+    setTimeout(applyNodeClasses, 100);
     
     // Listen for messages from React Native
     window.addEventListener('message', (event) => {
@@ -75,28 +329,23 @@
         // Re-initialize Mermaid with new theme
         mermaid.initialize({
           startOnLoad: false,
-          theme: currentTheme,
-          themeVariables: currentTheme === 'dark' ? {
-            primaryColor: '#00FFFF',
-            primaryTextColor: '#FFFFFF',
-            primaryBorderColor: '#8B5CF6',
-            lineColor: '#00FFFF',
-            secondaryColor: '#8B5CF6',
-            tertiaryColor: '#EC4899',
-          } : {
-            primaryColor: '#0EA5E9',
-            primaryTextColor: '#1E293B',
-            primaryBorderColor: '#7C3AED',
-            lineColor: '#0EA5E9',
-            secondaryColor: '#7C3AED',
-            tertiaryColor: '#EC4899',
-          }
+          theme: 'base',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true,
+            curve: 'basis',
+            padding: 25,
+            nodeSpacing: 50,
+            rankSpacing: 60
+          },
+          themeVariables: getThemeVariables(currentTheme)
         });
         
         // Re-render chart
         const chartElement = document.getElementById('mermaidChart');
         if (chartElement) {
           mermaid.run({ nodes: [chartElement] });
+          setTimeout(applyNodeClasses, 100);
         }
       }
       
