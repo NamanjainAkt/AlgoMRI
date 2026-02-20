@@ -1,26 +1,11 @@
 import './global.css';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
-import * as Font from 'expo-font';
-import {
-  Orbitron_400Regular,
-  Orbitron_700Bold,
-  Orbitron_900Black,
-} from '@expo-google-fonts/orbitron';
-import {
-  Exo2_400Regular,
-  Exo2_600SemiBold,
-  Exo2_700Bold,
-} from '@expo-google-fonts/exo-2';
-import {
-  SpaceMono_400Regular,
-  SpaceMono_700Bold,
-} from '@expo-google-fonts/space-mono';
 
 // OpenRouter Configuration
 const openRouterKey = process.env.EXPO_PUBLIC_OPENROUTER_API_KEY;
@@ -103,29 +88,7 @@ function AppContent() {
 }
 
 export default function App() {
-  const [fontsLoaded, setFontsLoaded] = useState(false);
-
-  useEffect(() => {
-    async function loadFonts() {
-      try {
-        await Font.loadAsync({
-          Orbitron_400Regular,
-          Orbitron_700Bold,
-          Orbitron_900Black,
-          Exo2_400Regular,
-          Exo2_600SemiBold,
-          Exo2_700Bold,
-          SpaceMono_400Regular,
-          SpaceMono_700Bold,
-        });
-        setFontsLoaded(true);
-      } catch (error) {
-        console.error('Error loading fonts:', error);
-      }
-    }
-
-    loadFonts();
-  }, []);
+  const fontsLoaded = true;
 
   if (!fontsLoaded) {
     return (

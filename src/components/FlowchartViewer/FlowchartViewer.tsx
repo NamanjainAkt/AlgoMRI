@@ -389,6 +389,12 @@ export const FlowchartViewer: React.FC<FlowchartViewerProps> = ({ nodes, edges, 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        minHeight: 680,
+        borderWidth: 2,
+        borderColor: '#8080809a',
+        borderRadius: 12,
+        overflow: 'hidden',
+        padding:6,
     },
     svgWrapper: {
         flex: 1,
