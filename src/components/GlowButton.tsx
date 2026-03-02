@@ -1,6 +1,7 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle, Animated } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring, interpolateColor } from 'react-native-reanimated';
 import { useTheme } from '../context/ThemeContext';
 
 interface GlowButtonProps {
@@ -9,6 +10,9 @@ interface GlowButtonProps {
     style?: ViewStyle;
     textStyle?: TextStyle;
     disabled?: boolean;
+    icon?: React.ReactNode;
+    size?: 'small' | 'medium' | 'large';
+    variant?: 'primary' | 'secondary' | 'outline';
 }
 
 export const GlowButton: React.FC<GlowButtonProps> = ({
@@ -16,42 +20,88 @@ export const GlowButton: React.FC<GlowButtonProps> = ({
     onPress,
     style,
     textStyle,
-    disabled = false
+    disabled = false,
+    icon,
+    size = 'medium',
+    variant = 'primary',
 }) => {
-    const { theme } = useTheme();
-    const scaleAnim = React.useRef(new Animated.Value(1)).current;
+    const { theme, isDark } = useTheme();
+    const scale = useSharedValue(1);
+    const pressed = useSharedValue(0);
+
+    const animatedStyle = useAnimatedStyle(() => ({
+        transform: [{ scale: scale.value }],
+    }));
 
     const handlePressIn = () => {
-        Animated.spring(scaleAnim, {
-            toValue: 0.95,
-            useNativeDriver: true,
-        }).start();
+        scale.value = withSpring(0.96, { damping: 15, stiffness: 300 });
+        pressed.value = withSpring(1, { damping: 15, stiffness: 300 });
     };
 
     const handlePressOut = () => {
-        Animated.spring(scaleAnim, {
-            toValue: 1,
-            useNativeDriver: true,
-        }).start();
+        scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+        pressed.value = withSpring(0, { damping: 15, stiffness: 300 });
     };
 
+    const sizeStyles = {
+        small: { paddingVertical: 10, paddingHorizontal: 20, fontSize: 14 },
+        medium: { paddingVertical: 14, paddingHorizontal: 28, fontSize: 16 },
+        large: { paddingVertical: 18, paddingHorizontal: 36, fontSize: 18 },
+    };
+
+    const getGradientColors = () => {
+        if (disabled) return ['#6B7280', '#4B5563'];
+        if (variant === 'primary') return [theme.primary, theme.secondary];
+        if (variant === 'secondary') return [theme.surface, theme.surface];
+        return ['transparent', 'transparent'];
+    };
+
+    const textColor = disabled
+        ? '#9CA3AF'
+        : variant === 'primary'
+        ? '#FFFFFF'
+        : variant === 'outline'
+        ? theme.primary
+        : theme.text;
+
+    const borderColor = variant === 'outline' ? theme.primary : 'transparent';
+
     return (
-        <Animated.View style={[{ transform: [{ scale: scaleAnim }] }, style]}>
+        <Animated.View style={[styles.container, animatedStyle, style]}>
             <TouchableOpacity
                 onPress={onPress}
                 onPressIn={handlePressIn}
                 onPressOut={handlePressOut}
                 disabled={disabled}
-                style={styles.container}
-                activeOpacity={0.8}
+                activeOpacity={0.9}
+                style={[
+                    styles.touchable,
+                    { borderColor, borderWidth: variant === 'outline' ? 2 : 0 },
+                ]}
             >
                 <LinearGradient
-                    colors={[theme.primary, theme.secondary]}
+                    colors={getGradientColors()}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
-                    style={styles.gradient}
+                    style={[
+                        styles.gradient,
+                        {
+                            paddingVertical: sizeStyles[size].paddingVertical,
+                            paddingHorizontal: sizeStyles[size].paddingHorizontal,
+                        },
+                    ]}
                 >
-                    <Text style={[styles.text, { color: theme.background }, textStyle]}>
+                    {icon && <Animated.View style={styles.icon}>{icon}</Animated.View>}
+                    <Text
+                        style={[
+                            styles.text,
+                            {
+                                color: textColor,
+                                fontSize: sizeStyles[size].fontSize,
+                            },
+                            textStyle,
+                        ]}
+                    >
                         {title}
                     </Text>
                 </LinearGradient>
@@ -62,23 +112,24 @@ export const GlowButton: React.FC<GlowButtonProps> = ({
 
 const styles = StyleSheet.create({
     container: {
-        borderRadius: 12,
+        borderRadius: 14,
         overflow: 'hidden',
-        elevation: 5,
-        shadowColor: '#00FFFF',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
+    },
+    touchable: {
+        borderRadius: 14,
+        overflow: 'hidden',
     },
     gradient: {
-        paddingVertical: 16,
-        paddingHorizontal: 32,
+        flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
+        gap: 8,
+    },
+    icon: {
+        marginRight: 4,
     },
     text: {
-        fontSize: 16,
         fontWeight: '700',
-        letterSpacing: 1,
+        letterSpacing: 0.5,
     },
 });

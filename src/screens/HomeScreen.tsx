@@ -3,10 +3,11 @@ import { View, StyleSheet, ScrollView, ActivityIndicator, Alert, Text } from 're
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
+import Animated, { FadeInUp, FadeInDown, FadeIn } from 'react-native-reanimated';
 import { Header } from '../components/Header';
 import { CodeEditor } from '../components/CodeEditor';
 import { GlowButton } from '../components/GlowButton';
-import { GlassCard } from '../components/GlassCard';
+import { CircuitBackground } from '../components/CircuitBackground';
 import { useTheme } from '../context/ThemeContext';
 import { analyzeCode } from '../services/aiAnalyzer';
 import { storageService } from '../services/storageService';
@@ -29,11 +30,7 @@ export const HomeScreen = () => {
         setIsAnalyzing(true);
         try {
             const result = await analyzeCode(code);
-
-            // Save to offline storage
             await storageService.saveAnalysis(code, result);
-
-            // Navigate to results
             navigation.navigate('Result', { result, code });
         } catch (error) {
             console.error('Analysis error:', error);
@@ -43,45 +40,56 @@ export const HomeScreen = () => {
         }
     };
 
-
     return (
         <View style={[styles.container, { backgroundColor: theme.background }]}>
+            <CircuitBackground />
             <Header title="AlgoMRI" />
 
             <ScrollView
                 style={styles.content}
                 contentContainerStyle={styles.contentContainer}
+                showsVerticalScrollIndicator={false}
             >
-                {/* Hero Section */}
-                <View style={styles.hero}>
-                    <Text style={[styles.heroSubtitle, { color: theme.textMuted }]}>
-                        Paste your code and get instant flowcharts, complexity analysis, and pseudocode
+                {/* Typography Hero */}
+                <Animated.View entering={FadeInDown.duration(600)} style={styles.hero}>
+                    <Text style={[styles.headline, { color: theme.text }]}>
+                        Analyze your
                     </Text>
-                </View>
-
-                {/* Features Grid */}
+                    <Text style={[styles.headline, { color: theme.text }]}>
+                        code instantly
+                    </Text>
+                </Animated.View>
 
                 {/* Code Input */}
-                <CodeEditor
-                    value={code}
-                    onChangeText={setCode}
-                    placeholder="Paste your code here...&#10;&#10;Example:&#10;function bubbleSort(arr) {&#10;  for (let i = 0; i < arr.length; i++) {&#10;    for (let j = 0; j < arr.length - i - 1; j++) {&#10;      if (arr[j] > arr[j + 1]) {&#10;        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];&#10;      }&#10;    }&#10;  }&#10;  return arr;&#10;}"
-                />
-
-                {isAnalyzing ? (
-                    <View style={styles.loadingContainer}>
-                        <ActivityIndicator size="large" color={theme.primary} />
-                        <Text style={[styles.loadingText, { color: theme.textMuted }]}>
-                            Analyzing your code...
-                        </Text>
-                    </View>
-                ) : (
-                    <GlowButton
-                        title="Analyze Code"
-                        onPress={handleAnalyze}
-                        disabled={!code.trim()}
+                <Animated.View entering={FadeInUp.duration(500).delay(200)}>
+                    <CodeEditor
+                        value={code}
+                        onChangeText={setCode}
                     />
-                )}
+                </Animated.View>
+
+                {/* Analyze Button */}
+                <View style={styles.buttonContainer}>
+                    {isAnalyzing ? (
+                        <Animated.View entering={FadeIn.duration(300)} style={styles.loadingContainer}>
+                            <ActivityIndicator size="large" color={theme.primary} />
+                            <Text style={[styles.loadingText, { color: theme.textMuted }]}>
+                                Analyzing...
+                            </Text>
+                        </Animated.View>
+                    ) : (
+                        <Animated.View entering={FadeInUp.duration(500).delay(400)}>
+                            <GlowButton
+                                title="Analyze"
+                                onPress={handleAnalyze}
+                                disabled={!code.trim()}
+                                size="large"
+                            />
+                        </Animated.View>
+                    )}
+                </View>
+
+                <View style={styles.bottomSpace} />
             </ScrollView>
         </View>
     );
@@ -95,55 +103,32 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     contentContainer: {
-        padding: 16,
+        padding: 20,
     },
     hero: {
-        marginBottom: 16,
-        alignItems: 'center',
+        marginBottom: 32,
+        marginTop: 20,
+        paddingLeft: 4,
     },
-    heroTitle: {
-        fontSize: 28,
+    headline: {
+        fontSize: 42,
         fontWeight: '800',
-        textAlign: 'center',
-        marginBottom: 8,
-        letterSpacing: -0.5,
+        letterSpacing: -1.5,
+        lineHeight: 46,
     },
-    heroSubtitle: {
-        fontSize: 14,
-        textAlign: 'center',
-        lineHeight: 20,
-        maxWidth: 320,
-    },
-    featuresGrid: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 8,
-        marginBottom: 16,
-    },
-    featureCard: {
-        flex: 1,
-        minWidth: '45%', // Force 2x2 grid more reliably
-        padding: 12,
-        borderRadius: 10,
-        borderWidth: 1,
-        alignItems: 'center',
-        gap: 4,
-    },
-    featureTitle: {
-        fontSize: 13,
-        fontWeight: '700',
-    },
-    featureDesc: {
-        fontSize: 11,
-        textAlign: 'center',
-        lineHeight: 14,
+    buttonContainer: {
+        marginTop: 8,
     },
     loadingContainer: {
-        padding: 32,
+        paddingVertical: 24,
         alignItems: 'center',
         gap: 12,
     },
     loadingText: {
         fontSize: 14,
+        fontWeight: '500',
+    },
+    bottomSpace: {
+        height: 32,
     },
 });
