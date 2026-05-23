@@ -1,3 +1,5 @@
+<img src='https://res.cloudinary.com/dh3lfnn45/image/upload/v1779495616/Screenshot_2026-02-20_221645_zniwjm.png'>
+
 # AlgoMRI - Code Analysis & Logic Visualization Platform
 
 A futuristic React Native app that converts code into visual logic, dry runs, complexity analysis, and test cases.
